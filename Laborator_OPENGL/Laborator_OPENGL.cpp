@@ -6,6 +6,90 @@
 #pragma comment (lib, "legacy_stdio_definitions.lib")
 #include "glaux.h"
 #pragma comment(lib,"Glaux.lib")
+#include <math.h>
+#define RADGRAD 0.0174532925199433
+#define MAXH 150
+#define MAXS 150
+
+//
+// ========== Cone from circle (0.0, 0.0, 1.0, r = 1.0) ==================================
+//
+class cone0
+{
+protected:
+	int nh;
+	int ns;
+	double c[MAXH][MAXS][3];
+public:
+	cone0(int, int);
+	void draw();
+};
+cone0::cone0(int heightsegm, int sectors)
+{
+	int i, j;
+	nh = heightsegm;
+	ns = sectors;
+	if (nh > MAXH)
+		nh = MAXH;
+	else
+		if (nh < 1)
+			nh = 10;
+	if (ns > MAXS)
+		ns = MAXS;
+	else
+		if (ns < 3)
+			ns = 10;
+	double hstep = 1.0 / nh;
+	double astep = -360.0 / ns;
+	// double astep = -270.0 / ns;
+	double hcur, acur, rcur;
+	acur = 0.0;
+	rcur = 1.0;
+	for (j = 0; j < ns; j++)
+	{
+		c[nh - 1][j][0] = rcur * cos(RADGRAD * acur);
+		c[nh - 1][j][1] = rcur * sin(RADGRAD * acur);
+		c[nh - 1][j][2] = 1.0;
+		acur += astep;
+	}
+	hcur = 0.0;
+	for (i = 0; i < nh - 1; i++)
+	{
+		hcur += hstep;
+		for (j = 0; j < ns; j++)
+		{
+			c[i][j][0] = c[nh - 1][j][0] * hcur;
+			c[i][j][1] = c[nh - 1][j][1] * hcur;
+			c[i][j][2] = hcur;
+		}
+	}
+}
+void cone0::draw()
+{
+	int i, j;
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3d(0., 0., 0.);
+	for (j = 0; j < ns; j++)
+		glVertex3dv(c[0][j]);
+	glVertex3dv(c[0][0]);
+	glEnd();
+	for (i = 0; i < nh - 1; i++)
+	{
+		glBegin(GL_TRIANGLE_STRIP);
+		for (j = 0; j < ns; j++)
+		{
+			glVertex3dv(c[i][j]);
+			glVertex3dv(c[i + 1][j]);
+		}
+		glVertex3dv(c[i][0]);
+		glVertex3dv(c[i + 1][0]);
+		glEnd();
+	}
+}
+static cone0 caxis(6, 12);
+static cone0 c1(10, 30);
+
+
 void CALLBACK resize(int width, int height)
 {
 	// Aici se indică partea ferestrei în care
@@ -82,6 +166,79 @@ void CALLBACK display(void)
 	glTranslated(0.0f, 0.0f, 5.3f);
 	auxSolidCone(0.1f, 0.2f);
 	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(0.0, 0.0, 1.0);
+	glScaled(2.0, 2.0, 3.0);
+	glColor3d(1.0, 0.0, 1.0);
+	c1.draw();
+	glPopMatrix();
+
+	static GLdouble rz45[16] =
+	{
+	 0.707, 0.707, 0., 0.,
+	 -0.707, 0.707, 0., 0.,
+	 0., 0., 1., 0.,
+	 0., 0., 0., 1.
+	};
+	glMultMatrixd(rz45);
+
+	static GLdouble su200[16] =
+	{
+	 2., 0., 0., 0.,
+	 0., 2., 0., 0.,
+	 0., 0., 2., 0.,
+	 0., 0., 0., 1.
+	};
+	glMultMatrixd(su200);
+
+
+
+	const GLubyte mask[32 * 4] =
+	{
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0x0F, 0x0F, 0x0F, 0x0F,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	0xF0, 0xF0, 0xF0, 0xF0,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0xF0, 0xF0, 0xF0, 0xF0,
+	 0xF0, 0xF0, 0xF0, 0xF0,
+	 0xF0, 0xF0, 0xF0, 0xF0,
+	 0xF0, 0xF0, 0xF0, 0xF0,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F,
+	 0x0F, 0x0F, 0x0F, 0x0F
+	};
+	glEnable(GL_POLYGON_STIPPLE);
+	glPolygonStipple(mask);
+	glBegin(GL_QUADS);
+	glColor3d(1., 0., 0.);
+	glVertex3d(-5., -5., -2.);
+	glVertex3d(-5., 5., -2.);
+	glVertex3d(5., 5., -2.);
+	glVertex3d(5., -5., -2.);
+	glEnd();
+	glDisable(GL_POLYGON_STIPPLE);
 	//VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 	// Aici vom adăuga fragmente de cod pentru diferite
 // exemple, pe parcursul studierii funcţiilor OpenGL
@@ -91,6 +248,8 @@ void CALLBACK display(void)
 }
 int main()
 {
+
+	
 	// Stabilim coordonatele ferestrei pe ecran
 	// coltul stânga sus (0,0)
 	// lăţimea şi înălţimea - 500
