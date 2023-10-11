@@ -6,7 +6,6 @@
 #pragma comment (lib, "legacy_stdio_definitions.lib")
 #include "glaux.h"
 #pragma comment(lib,"Glaux.lib")
-
 #include <math.h>
 #define RADGRAD 0.0174532925199433
 
@@ -361,19 +360,14 @@ coneA2::coneA2(int heightsegm, int sectors)
     else
         if (ns < 3)
             ns = 10;
-
-
+    a1 = new arc(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
     t1 = new tr0(2.0, 1.0, 2.0, -1.0, nh, ns / 8);
+    a2 = new arc(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
     t2 = new tr0(1.0, -2.0, -1.0, -2.0, nh, ns / 8);
+    a3 = new arc(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
     t3 = new tr0(-2.0, -1.0, -2.0, 1.0, nh, ns / 8);
+    a4 = new arc(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
     t4 = new tr0(-1.0, 2.0, 1.0, 2.0, nh, ns / 8);
-
-
-    a1 = new arc(point2(2.0, 2.0), 1.0, 0.0, 360.0, nh, ns / 8);
-    a2 = new arc(point2(2.0, -2.0), 1.0, 0.0, 360.0, nh, ns / 8);
-    a3 = new arc(point2(-2.0, -2.0), 1.0, 0.0, 360.0, nh, ns / 8);
-    a4 = new arc(point2(-2.0, 2.0), 1.0, 0.0, 360.0, nh, ns / 8);
-
 }
 void coneA2::draw()
 {
@@ -943,15 +937,13 @@ coneA2nt::coneA2nt(int heightsegm, int sectors)
         if (ns < 3)
             ns = 10;
     t1 = new tr0_norm_text(2.0, 1.0, 2.0, -1.0, nh, ns / 8, 0.125, 0.250);
+    a1 = new arc_norm_text(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8, 0.0, 0.125);
+    a2 = new arc_norm_text(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8, 0.250, 0.375);
     t2 = new tr0_norm_text(1.0, -2.0, -1.0, -2.0, nh, ns / 8, 0.375, 0.5);
+    a3 = new arc_norm_text(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8, 0.5, 0.625);
     t3 = new tr0_norm_text(-2.0, -1.0, -2.0, 1.0, nh, ns / 8, 0.625, 0.750);
+    a4 = new arc_norm_text(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8, 0.750, 0.875);
     t4 = new tr0_norm_text(-1.0, 2.0, 1.0, 2.0, nh, ns / 8, 0.875, 1.0);
-
-    a1 = new arc_norm_text(point2(2.0, 2.0), 1.0, 0.0, 360.0, nh, ns / 8, 0.0, 0.125);
-    a2 = new arc_norm_text(point2(2.0, -2.0), 1.0, 0.0, 360.0, nh, ns / 8, 0.250, 0.375);
-    a3 = new arc_norm_text(point2(-2.0, -2.0), 1.0, 0.0, 360.0, nh, ns / 8, 0.5, 0.625);
-    a4 = new arc_norm_text(point2(-2.0, 2.0), 1.0, 0.0, 360.0, nh, ns / 8, 0.750, 0.875);
-
 }
 void coneA2nt::draw()
 {
@@ -1063,14 +1055,6 @@ AUX_RGBImageRec* GenChecker(int nu, int nv, int ku = 8, int kv = 8)
     return pimage;
 }
 
-
-
-
-
-
-
-
-
 tr0* cone;
 
 //
@@ -1084,28 +1068,18 @@ void CALLBACK resize(int width, int height)
     glGetIntegerv(GL_VIEWPORT, CurrentVp);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    ///*
-    //
+
     // Orthogonal projection
-    //
     MinX = -6.2, MaxX = 6.2;
     MinY = -6.2, MaxY = 6.2;
     NearZ = -1.0, FarZ = -13.0;
     glOrtho(MinX, MaxX, MinY, MaxY, -NearZ, -FarZ);
-    //*/
-    /*
-//
-// Perspective projection
-//
-MinX = -5.2, MaxX = 5.2;
-MinY = -5.2, MaxY = 5.2;
-NearZ = -4.0, FarZ = -20.0;
-glFrustum(MinX, MaxX, MinY, MaxY, -NearZ, -FarZ);
-MinX *= FarZ/NearZ, MaxX *= FarZ/NearZ;
-MinY *= FarZ/NearZ, MaxY *= FarZ/NearZ;
-*/
+
     glMatrixMode(GL_MODELVIEW);
 }
+
+
+
 //
 // ============== Drawing axes ============================
 //
@@ -1123,12 +1097,21 @@ double fi = 35.0;
 static coneA2 cA2(6, 96); // Half own surface arc method
 static coneA2_inv cA2i(6, 96); // Half own surface inverted arc method
 static coneA2n cA2n(6, 96); // Half own surface with normal vectors
- // arc method
 static coneA2n_inv cA2ni(6, 96); // Half own surface inverted with normal vectors
- // arc method
 static coneA2nt cA2nt(6, 96); // Half own surface with normal vectors and 
- // texture arc method
-void CALLBACK display(void)
+
+void CALLBACK Mouse_Left_DOWN(AUX_EVENTREC* p_ev_rec)
+{
+    fi += 5.0;
+}
+void CALLBACK Mouse_Right_DOWN(AUX_EVENTREC* p_ev_rec)
+{
+    fi -= 5.0;
+}
+
+
+void CALLBACK display(
+    void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1143,7 +1126,7 @@ void CALLBACK display(void)
     glEnable(GL_COLOR_MATERIAL);
     glPushMatrix();
 
-    fi += 0.05;
+    // fi += 0.05;
     glTranslated(0.0, 0.0, (NearZ + FarZ) * 0.5);
     glRotated(0.0 + fi, 1.0, 0.0, 0.0);
     glRotated(0.0 - 2.0 * fi, 0.0, 1.0, 0.0);
@@ -1200,6 +1183,11 @@ void main()
     auxInitWindow((LPCWSTR)("OpenGL N 43"));
     auxIdleFunc(display);
     auxReshapeFunc(resize);
+
+    auxMouseFunc(AUX_LEFTBUTTON, AUX_MOUSEDOWN, Mouse_Left_DOWN);
+    auxMouseFunc(AUX_RIGHTBUTTON, AUX_MOUSEDOWN, Mouse_Right_DOWN);
+
+
     glEnable(GL_ALPHA_TEST);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
