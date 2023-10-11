@@ -654,10 +654,11 @@ coneA2n::coneA2n(int heightsegm, int sectors)
     t3 = new tr0_norm(-2.0, -1.0, -2.0, 1.0, nh, ns / 8);
     t4 = new tr0_norm(-1.0, 2.0, 1.0, 2.0, nh, ns / 8);
 
-    a1 = new arc_norm(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
-    a2 = new arc_norm(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
-    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
-    a4 = new arc_norm(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
+    // Changed from 2.0 to 1.75
+    a1 = new arc_norm(point2(1.75, 1.75), 1.0, 180.0, -90.0, nh, ns / 8);
+    a2 = new arc_norm(point2(1.75, -1.75), 1.0, 90.0, -180.0, nh, ns / 8);
+    a3 = new arc_norm(point2(-1.75, -1.75), 1.0, 360.0, 90.0, nh, ns / 8);
+    a4 = new arc_norm(point2(-1.75, 1.75), 1.0, 270.0, 0.0, nh, ns / 8);
 }
 void coneA2n::draw()
 {
@@ -705,10 +706,11 @@ coneA2n_inv::coneA2n_inv(int heightsegm, int sectors)
     t3 = new tr0_norm(-1.0, -2.0, 1.0, -2.0, nh, ns / 8);
     t4 = new tr0_norm(2.0, -1.0, 2.0, 1.0, nh, ns / 8);
 
-    a1 = new arc_norm(point2(2.0, 2.0), 1.0, -90.0, 180.0, nh, ns / 8);
-    a2 = new arc_norm(point2(-2.0, 2.0), 1.0, 0.0, 270.0, nh, ns / 8);
-    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 90.0, 360.0, nh, ns / 8);
-    a4 = new arc_norm(point2(2.0, -2.0), 1.0, -180.0, 90.0, nh, ns / 8);
+    // Changed from 2.0 to 1.75
+    a1 = new arc_norm(point2(1.75, 1.75), 1.0, -90.0, 180.0, nh, ns / 8);
+    a2 = new arc_norm(point2(-1.75, 1.75), 1.0, 0.0, 270.0, nh, ns / 8);
+    a3 = new arc_norm(point2(-1.75, -1.75), 1.0, 90.0, 360.0, nh, ns / 8);
+    a4 = new arc_norm(point2(1.75, -1.75), 1.0, -180.0, 90.0, nh, ns / 8);
 }
 void coneA2n_inv::draw()
 {
