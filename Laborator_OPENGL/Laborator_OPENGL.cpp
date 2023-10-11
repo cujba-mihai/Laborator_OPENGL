@@ -1102,47 +1102,192 @@ MinY *= FarZ/NearZ, MaxY *= FarZ/NearZ;
 //
 // ============== Drawing axes ============================
 //
-
+//
+// ============= display(void) =======================
+//
+static GLdouble MSym[16] =
+{
+-1.0, 0.0, 0.0, 0.0,
+0.0, -1.0, 0.0, 0.0,
+0.0, 0.0, -1.0, 0.0,
+0.0, 0.0, 0.0, 1.0
+};
+double fi = 35.0;
+static coneA2 cA2(6, 96); // Half own surface arc method
+static coneA2_inv cA2i(6, 96); // Half own surface inverted arc method
+static coneA2n cA2n(6, 96); // Half own surface with normal vectors
+// arc method
+static coneA2n_inv cA2ni(6, 96); // Half own surface inverted with normal vectors
+// arc method
+static coneA2nt cA2nt(6, 96); // Half own surface with normal vectors and 
+// texture arc method
 void CALLBACK display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClear( GL_COLOR_BUFFER_BIT );
+    // glClear( GL_DEPTH_BUFFER_BIT );
+    ///*
+    //
+    // For step IV only
+    //
+    glRasterPos3d(MinX + 0.01, MinY + 0.01, FarZ + 0.001);
+    glPixelZoom((float)CurrentVp[2] / pimage->sizeX,
+        (float)CurrentVp[3] / pimage->sizeY);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glDrawPixels(pimage->sizeX, pimage->sizeY,
+        GL_RGB, GL_UNSIGNED_BYTE, pimage->data);
+    //*/
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_COLOR_MATERIAL);
     glPushMatrix();
-
-    if (cone) {
-        cone->draw(); // This draws the cone
-    }
-
-    glTranslated(0., 0., -6.0);
-    glRotated(35., 1., 0., 0.);
-    glRotated(-35., 0., 1., 0.);
-    glPointSize(10.0f);
-    glEnable(GL_POINT_SMOOTH);
-    glBegin(GL_POINTS);
-    glColor3d(0, 0, 0);
-    glVertex3f(0.f, 0.f, 0.f);
-    glEnd();
-    glDisable(GL_POINT_SMOOTH);
-    glLineWidth(1.5f);
-    glEnable(GL_LINE_SMOOTH);
-    glBegin(GL_LINES);
-    glColor3d(0., 0., 0.);
-    glVertex3d(-5.5, 0., 0.);
-    glColor3d(1., 0., 0.);
-    glVertex3d(5.5, 0., 0.);
-    glColor3d(0., 0., 0.);
-    glVertex3d(0., -5.5, 0.);
-    glColor3d(0., 1., 0.);
-    glVertex3d(0., 5.5, 0.);
-    glColor3d(0., 0., 0.);
-    glVertex3d(0., 0., -5.5);
-    glColor3d(0., 0., 1.);
-    glVertex3d(0., 0., 5.5);
-    glEnd();
-
-
-
+    /*
+    // Front
+    glTranslated(0.0, 0.0, -7.0);
+    //
+    */
+    /*
+    // Top
+    glTranslated(0.0, 0.0, -7.0);
+    glRotated(90.0, 1.0, 0.0, 0.0);
+    //
+    */
+    /*
+    // Left
+    glTranslated(0.0, 0.0, -7.0);
+    glRotated(90.0, 0.0, 1.0, 0.0);
+    //
+    */
+    ///*
+// Orto
+    fi += 0.05;
+    glTranslated(0.0, 0.0, (NearZ + FarZ) * 0.5);
+    glRotated(0.0 + fi, 1.0, 0.0, 0.0);
+    glRotated(0.0 - 2.0 * fi, 0.0, 1.0, 0.0);
+    //*/
+    drawaxis(); // Drawing axes of current model coordinate system 
+    //VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+    //
+    // Custom drawing
+    //
+    /*
+    //
+    // Step I
+    //
+    glPolygonMode(GL_FRONT, GL_FILL);
+    // glPolygonMode(GL_BACK, GL_FILL);
+    glPolygonMode(GL_BACK, GL_LINE);
+    glPushMatrix();
+    glScaled(1.0, 1.0, 3.0);
+    // glScaled(0.75, 0.75, 4.0);
+    glColor3d(1.0, 0.0, 1.0);
+    cA2.draw(); // Drawing own surface in the base on arcs
+    // and segments
+    glPushMatrix();
+    glMultMatrixd(MSym);
+    cA2i.draw(); // Drawing own surface in the base on arcs
+    // and segments
+    glPopMatrix();
+    glPopMatrix();
+    */
+    /*
+    //
+    // Step II
+    //
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_BACK, GL_FILL);
+    // glPolygonMode(GL_BACK, GL_LINE);
+    glPushMatrix();
+    glScaled(1.0, 1.0, 3.0);
+    // glScaled(0.75, 0.75, 4.0);
+    glColor3d(1.0, 0.0, 1.0);
+    cA2n.draw(); // Drawing own surface in the base on arcs
+    // and segments with normal vectors
+    glPushMatrix();
+    glMultMatrixd(MSym);
+    cA2ni.draw(); // Drawing own surface inverted in the base
+    // on arcs and segments with normal vectors
+    glPopMatrix();
+    glPopMatrix();
+    */
+    /*
+    //
+    // Step III
+//
+glDisable(GL_COLOR_MATERIAL);
+GLfloat fd[4] = {0.8f, 0.8f, 0.0f, 1.0f};
+glMaterialfv(GL_FRONT, GL_DIFFUSE, fd);
+GLfloat fa[4] = {0.3f, 0.3f, 0.0f, 1.0f};
+glMaterialfv(GL_FRONT, GL_AMBIENT, fa);
+GLfloat fs[4] = {0.1f, 0.1f, 0.0f, 1.0f};
+glMaterialfv(GL_FRONT, GL_SPECULAR, fs);
+GLfloat bd[4] = {0.7f, 0.0f, 0.0f, 1.0f};
+glMaterialfv(GL_BACK, GL_DIFFUSE, bd);
+GLfloat ba[4] = {0.2f, 0.0f, 0.0f, 1.0f};
+glMaterialfv(GL_BACK, GL_AMBIENT, ba);
+glPolygonMode(GL_FRONT, GL_FILL);
+glPolygonMode(GL_BACK, GL_FILL);
+// glPolygonMode(GL_BACK, GL_LINE);
+glPushMatrix();
+glScaled(1.0, 1.0, 3.0);
+// glScaled(0.75, 0.75, 4.0);
+glColor3d(1.0, 0.0, 1.0);
+cA2n.draw(); // Drawing own surface in the base on arcs
+// and segments with normal vectors
+glPushMatrix();
+glMultMatrixd(MSym);
+cA2ni.draw(); // Drawing own surface inverted in the base
+ // on arcs and segments with normal vectors
+glPopMatrix();
+glPopMatrix();
+glEnable(GL_COLOR_MATERIAL);
+*/
+///*
+//
+// Step IV
+//
+    glDisable(GL_COLOR_MATERIAL);
+    GLfloat fd[4] = { 0.8f, 0.8f, 0.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, fd);
+    GLfloat fa[4] = { 0.3f, 0.3f, 0.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, fa);
+    GLfloat fs[4] = { 0.1f, 0.1f, 0.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_SPECULAR, fs);
+    GLfloat bd[4] = { 0.7f, 0.0f, 0.0f, 1.0f };
+    glMaterialfv(GL_BACK, GL_DIFFUSE, bd);
+    GLfloat ba[4] = { 0.2f, 0.0f, 0.0f, 1.0f };
+    glMaterialfv(GL_BACK, GL_AMBIENT, ba);
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_BACK, GL_FILL);
+    // glPolygonMode(GL_BACK, GL_LINE);
+    glPushMatrix();
+    glScaled(1.0, 1.0, 3.0);
+    // glScaled(0.75, 0.75, 4.0);
+    glColor3d(1.0, 0.0, 1.0);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    // glCullFace(GL_FRONT);
+    cA2nt.draw(); // Drawing own surface in the base on arcs
+    // and segments with normal vectors
+    glDisable(GL_TEXTURE_2D);
+    glCullFace(GL_FRONT);
+    // glCullFace(GL_BACK);
+    cA2n.draw(); // Drawing own surface in the base on arcs
+    // and segments with normal vectors
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_TEXTURE_2D);
+    glPushMatrix();
+    glMultMatrixd(MSym);
+    cA2ni.draw(); // Drawing own surface inverted in the base on
+    // arcs and segments with normal vectors
+    glPopMatrix();
+    glPopMatrix();
+    glEnable(GL_COLOR_MATERIAL);
+    //*/
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     glPopMatrix();
     auxSwapBuffers();
+
 }
 
 void main()
