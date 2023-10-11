@@ -17,12 +17,12 @@ GLint CurrentVp[4]; // For Viewport memorization
 AUX_RGBImageRec* pimage; // For Background
 AUX_RGBImageRec* TextureImage; // For Texture
 unsigned int TextureID;
+
+
 struct Color
 {
     unsigned char r, g, b;
 };
-
-
 
 struct point2
 {
@@ -255,6 +255,7 @@ void Bezier3::draw()
     }
     glEnd();
 }
+
 class arc
 {
 protected:
@@ -360,14 +361,16 @@ coneA2::coneA2(int heightsegm, int sectors)
     else
         if (ns < 3)
             ns = 10;
-    a1 = new arc(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
+
     t1 = new tr0(2.0, 1.0, 2.0, -1.0, nh, ns / 8);
-    a2 = new arc(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
     t2 = new tr0(1.0, -2.0, -1.0, -2.0, nh, ns / 8);
-    a3 = new arc(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
     t3 = new tr0(-2.0, -1.0, -2.0, 1.0, nh, ns / 8);
-    a4 = new arc(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
     t4 = new tr0(-1.0, 2.0, 1.0, 2.0, nh, ns / 8);
+
+    a1 = new arc(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
+    a2 = new arc(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
+    a3 = new arc(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
+    a4 = new arc(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
 }
 void coneA2::draw()
 {
@@ -410,14 +413,15 @@ coneA2_inv::coneA2_inv(int heightsegm, int sectors)
     else
         if (ns < 3)
             ns = 10;
-    a1 = new arc(point2(2.0, 2.0), 1.0, -90.0, 180.0, nh, ns / 8);
     t1 = new tr0(1.0, 2.0, -1.0, 2.0, nh, ns / 8);
-    a2 = new arc(point2(-2.0, 2.0), 1.0, 0.0, 270.0, nh, ns / 8);
     t2 = new tr0(-2.0, 1.0, -2.0, -1.0, nh, ns / 8);
-    a3 = new arc(point2(-2.0, -2.0), 1.0, 90.0, 360.0, nh, ns / 8);
     t3 = new tr0(-1.0, -2.0, 1.0, -2.0, nh, ns / 8);
-    a4 = new arc(point2(2.0, -2.0), 1.0, -180.0, 90.0, nh, ns / 8);
     t4 = new tr0(2.0, -1.0, 2.0, 1.0, nh, ns / 8);
+
+    a1 = new arc(point2(2.0, 2.0), 1.0, -90.0, 180.0, nh, ns / 8);
+    a2 = new arc(point2(-2.0, 2.0), 1.0, 0.0, 270.0, nh, ns / 8);
+    a3 = new arc(point2(-2.0, -2.0), 1.0, 90.0, 360.0, nh, ns / 8);
+    a4 = new arc(point2(2.0, -2.0), 1.0, -180.0, 90.0, nh, ns / 8);
 }
 void coneA2_inv::draw()
 {
@@ -644,14 +648,16 @@ coneA2n::coneA2n(int heightsegm, int sectors)
     else
         if (ns < 3)
             ns = 10;
-    a1 = new arc_norm(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
+
     t1 = new tr0_norm(2.0, 1.0, 2.0, -1.0, nh, ns / 8);
-    a2 = new arc_norm(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
     t2 = new tr0_norm(1.0, -2.0, -1.0, -2.0, nh, ns / 8);
-    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
     t3 = new tr0_norm(-2.0, -1.0, -2.0, 1.0, nh, ns / 8);
-    a4 = new arc_norm(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
     t4 = new tr0_norm(-1.0, 2.0, 1.0, 2.0, nh, ns / 8);
+
+    a1 = new arc_norm(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8);
+    a2 = new arc_norm(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8);
+    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8);
+    a4 = new arc_norm(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8);
 }
 void coneA2n::draw()
 {
@@ -693,14 +699,16 @@ coneA2n_inv::coneA2n_inv(int heightsegm, int sectors)
     else
         if (ns < 3)
             ns = 10;
-    a1 = new arc_norm(point2(2.0, 2.0), 1.0, -90.0, 180.0, nh, ns / 8);
+
     t1 = new tr0_norm(1.0, 2.0, -1.0, 2.0, nh, ns / 8);
-    a2 = new arc_norm(point2(-2.0, 2.0), 1.0, 0.0, 270.0, nh, ns / 8);
     t2 = new tr0_norm(-2.0, 1.0, -2.0, -1.0, nh, ns / 8);
-    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 90.0, 360.0, nh, ns / 8);
     t3 = new tr0_norm(-1.0, -2.0, 1.0, -2.0, nh, ns / 8);
-    a4 = new arc_norm(point2(2.0, -2.0), 1.0, -180.0, 90.0, nh, ns / 8);
     t4 = new tr0_norm(2.0, -1.0, 2.0, 1.0, nh, ns / 8);
+
+    a1 = new arc_norm(point2(2.0, 2.0), 1.0, -90.0, 180.0, nh, ns / 8);
+    a2 = new arc_norm(point2(-2.0, 2.0), 1.0, 0.0, 270.0, nh, ns / 8);
+    a3 = new arc_norm(point2(-2.0, -2.0), 1.0, 90.0, 360.0, nh, ns / 8);
+    a4 = new arc_norm(point2(2.0, -2.0), 1.0, -180.0, 90.0, nh, ns / 8);
 }
 void coneA2n_inv::draw()
 {
@@ -830,6 +838,7 @@ void tr0_norm_text::draw_inv()
     }
     glEnd();
 }
+
 //
 // ======= Cone from arc with normal vectors and texture coordinates ==================
 //
@@ -937,13 +946,14 @@ coneA2nt::coneA2nt(int heightsegm, int sectors)
         if (ns < 3)
             ns = 10;
     t1 = new tr0_norm_text(2.0, 1.0, 2.0, -1.0, nh, ns / 8, 0.125, 0.250);
+    t2 = new tr0_norm_text(1.0, -2.0, -1.0, -2.0, nh, ns / 8, 0.375, 0.5);
+    t3 = new tr0_norm_text(-2.0, -1.0, -2.0, 1.0, nh, ns / 8, 0.625, 0.750);
+    t4 = new tr0_norm_text(-1.0, 2.0, 1.0, 2.0, nh, ns / 8, 0.875, 1.0);
+
     a1 = new arc_norm_text(point2(2.0, 2.0), 1.0, 180.0, -90.0, nh, ns / 8, 0.0, 0.125);
     a2 = new arc_norm_text(point2(2.0, -2.0), 1.0, 90.0, -180.0, nh, ns / 8, 0.250, 0.375);
-    t2 = new tr0_norm_text(1.0, -2.0, -1.0, -2.0, nh, ns / 8, 0.375, 0.5);
     a3 = new arc_norm_text(point2(-2.0, -2.0), 1.0, 360.0, 90.0, nh, ns / 8, 0.5, 0.625);
-    t3 = new tr0_norm_text(-2.0, -1.0, -2.0, 1.0, nh, ns / 8, 0.625, 0.750);
     a4 = new arc_norm_text(point2(-2.0, 2.0), 1.0, 270.0, 0.0, nh, ns / 8, 0.750, 0.875);
-    t4 = new tr0_norm_text(-1.0, 2.0, 1.0, 2.0, nh, ns / 8, 0.875, 1.0);
 }
 void coneA2nt::draw()
 {
